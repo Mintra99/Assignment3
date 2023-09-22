@@ -1,25 +1,25 @@
 ﻿using Assignment3.Models;
 
-namespace Assignment3.Services.Characters
+namespace Assignment3.Services.Franchises
 {
-    public class CharacterService : ICharacterService
+    public class FranchiseService : IFranchiseService
     {
-        public Task<Character> CreateAsync(Character entity)
+        public Task<Franchise> CreateAsync(Franchise entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Character>> GetAsync()
+        public Task<List<Franchise>> GetAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Character> GetByIdAsync(int id)
+        public Task<Franchise> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Character> UpdateAsync(Character entity)
+        public Task<Franchise> UpdateAsync(Franchise entity)
         {
             throw new NotImplementedException();
         }

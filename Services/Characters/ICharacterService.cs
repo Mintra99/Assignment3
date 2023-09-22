@@ -2,7 +2,7 @@
 
 namespace Assignment3.Services.Characters
 {
-    public interface ICharacterService : ICRUDService<Character>
+    public interface ICharacterService : ICRUDService<Character, int>
     {
 
     }

@@ -1,25 +1,25 @@
 ﻿using Assignment3.Models;
 
-namespace Assignment3.Services.Characters
+namespace Assignment3.Services.Movies
 {
-    public class CharacterService : ICharacterService
+    public class MovieService : IMovieService
     {
-        public Task<Character> CreateAsync(Character entity)
+        public Task<Movie> CreateAsync(Movie entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Character>> GetAsync()
+        public Task<List<Movie>> GetAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Character> GetByIdAsync(int id)
+        public Task<Movie> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Character> UpdateAsync(Character entity)
+        public Task<Movie> UpdateAsync(Movie entity)
         {
             throw new NotImplementedException();
         }

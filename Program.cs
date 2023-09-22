@@ -4,9 +4,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data.SqlClient;
 using Microsoft.OpenApi.Models;
 using Assignment3.Services.Characters;
+using Assignment3.Services.Franchises;
+using Assignment3.Services.Movies;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
+builder.Services.AddScoped<IFranchiseService, FranchiseService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddCors();
 
