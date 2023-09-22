@@ -1,27 +1,48 @@
 ﻿using Assignment3.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Assignment3.Services.Characters
 {
     public class CharacterService : ICharacterService
     {
-        public Task<Character> CreateAsync(Character entity)
+        private readonly MovieDbContext _context;
+
+        public CharacterService(MovieDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<List<Character>> GetAsync()
+        public async Task<Character> CreateAsync(Character entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _context.Characters.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public Task<Character> GetByIdAsync(int id)
+        public async Task<List<Character>> GetAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Characters.ToListAsync();
         }
 
-        public Task<Character> UpdateAsync(Character entity)
+        public async Task<Character> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Characters.FindAsync(id);
+        }
+
+        public async Task<Character> UpdateAsync(Character entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return entity;
         }
     }
 }
