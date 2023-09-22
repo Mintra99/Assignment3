@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Characters\" />
     <Folder Include="Services\Franchises\" />
     <Folder Include="Services\Movies\" />
   </ItemGroup>
