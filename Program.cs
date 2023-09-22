@@ -1,25 +1,19 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace Assignment3
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public class MovieDbContext : DbContext
+    {
+        public DbSet<Character> Characters { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Franchise> Franchises { get; set; }
+
+        public MovieDbContext(DbContextOptions<MovieDbContext> options) : base(options)
+        {
+        }
+
+        // Additional configuration and DbSet properties go here
+    }
+
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
