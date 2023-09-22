@@ -1,9 +1,15 @@
 ﻿using Assignment3.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Assignment3.Services.Franchises
 {
     public class FranchiseService : IFranchiseService
     {
+        private readonly MovieDbContext _db;
+        public FranchiseService(MovieDbContext db) {
+            _db = db;
+        }
+
         public Task<Franchise> CreateAsync(Franchise entity)
         {
             throw new NotImplementedException();
@@ -11,7 +17,9 @@ namespace Assignment3.Services.Franchises
 
         public Task<List<Franchise>> GetAsync()
         {
-            throw new NotImplementedException();
+            var franchises = _db.Franchises.ToListAsync();
+
+            return franchises;
         }
 
         public Task<Franchise> GetByIdAsync(int id)

@@ -14,14 +14,9 @@ namespace Assignment3.Models
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public MovieDbContext(DbContextOptions<MovieDbContext> options) : base (options)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+
         }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)

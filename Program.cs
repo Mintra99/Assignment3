@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using Assignment3.Services.Characters;
 using Assignment3.Services.Franchises;
 using Assignment3.Services.Movies;
+using Microsoft.Extensions.Options;
+using Assignment3.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -14,11 +16,25 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddCors();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSwagger",
+        builder => builder.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
 
-builder.Services.AddAuthorization();
+IConfigurationRoot configuration = new ConfigurationBuilder()
+    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+    .AddJsonFile("appsettings.json")
+    .Build();
 
-
+builder.Services.AddDbContext<MovieDbContext>(options =>
+{
+    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+    options.LogTo(Console.WriteLine, LogLevel.Information);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -34,7 +50,7 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var app = builder.Build();
-
+app.UseCors("AllowSwagger");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -45,7 +61,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
