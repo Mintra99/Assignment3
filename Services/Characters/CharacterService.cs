@@ -1,4 +1,6 @@
-﻿namespace Assignment3.Services.Characters
+﻿using Assignment3.Models;
+
+namespace Assignment3.Services.Characters
 {
     public class CharacterService : ICharacterService
     {

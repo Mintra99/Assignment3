@@ -9,7 +9,7 @@ namespace Assignment3.Models
         [Required]
         public string FullName { get; set; }
 
-        public string Alias { get; set; }
+        public string? Alias { get; set; }
 
         public string Gender { get; set; }
 
