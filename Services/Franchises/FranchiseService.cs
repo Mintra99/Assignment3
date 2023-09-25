@@ -1,4 +1,5 @@
 ﻿using Assignment3.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Assignment3.Services.Franchises
@@ -10,14 +11,24 @@ namespace Assignment3.Services.Franchises
             _db = db;
         }
 
-        public Task<Franchise> CreateAsync(Franchise entity)
+        public async Task<Franchise> CreateAsync(Franchise entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _db.Franchises.AddAsync(entity);
+                await _db.SaveChangesAsync();
+                return entity;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
-        public Task<List<Franchise>> GetAsync()
+        public async Task<List<Franchise>> GetAsync()
         {
-            var franchises = _db.Franchises.ToListAsync();
+            var franchises = await _db.Franchises.ToListAsync();
 
             return franchises;
         }

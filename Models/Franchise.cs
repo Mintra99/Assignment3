@@ -13,6 +13,6 @@ namespace Assignment3.Models
         public string? Description { get; set; }
 
         // Navigation property to relate franchises to movies
-        public ICollection<Movie> Movies { get; set; } = null!;
+        public ICollection<Movie>? Movies { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System.Text;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Data.SqlClient;
@@ -39,10 +40,18 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(options =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "FilmApi", Version = "v1" });
- 
+    options.SwaggerDoc("v1", new OpenApiInfo {
+        Title = "FilmApi",
+        Version = "v1",
+        Description = "An ASP.NET Core Web API for managing Films",
+    });
+
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
 });
 
 

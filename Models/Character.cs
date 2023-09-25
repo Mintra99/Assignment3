@@ -19,7 +19,7 @@ namespace Assignment3.Models
         public string? PictureUrl { get; set; }
 
         // Navigation property to relate characters to movies
-        public ICollection<Movie> Movies { get; set; } = null!;
+        public ICollection<Movie>? Movies { get; set; }
     }
 
 }

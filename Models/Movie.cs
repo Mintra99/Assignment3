@@ -30,7 +30,7 @@ namespace Assignment3
         public Franchise? Franchise { get; set; }
 
         // Navigation property to relate movies to characters
-        public ICollection<Character> Characters { get; set; } = null!;
+        public ICollection<Character>? Characters { get; set; }
 
     }
 }

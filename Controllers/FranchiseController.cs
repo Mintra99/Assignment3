@@ -12,20 +12,26 @@ namespace Assignment3.Controllers
 {
     [Route("api/v1/Franchise")]
     [ApiController]
+    [Produces("application/Json")]
+    [Consumes("application/Json")]
+    [ApiConventionType(typeof(DefaultApiConventions))]
     public class FranchiseController : ControllerBase
     {
-        private readonly IFranchiseService FranchiseService;
+        private readonly IFranchiseService _franchiseService;
 
         public FranchiseController(IFranchiseService franchiseService)
         {
-            FranchiseService = franchiseService;
+            _franchiseService = franchiseService;
         }
 
-        // GET: api/Franchise
+        /// <summary>
+        /// Gets all franchises
+        /// </summary>
+        /// <returns>All franchises</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Franchise>>> GetFranchises()
         {
-            var franchises = await FranchiseService.GetAsync();
+            var franchises = await _franchiseService.GetAsync();
 
             if (franchises == null)
             {
@@ -84,20 +90,15 @@ namespace Assignment3.Controllers
         //    return NoContent();
         //}
 
-        //// POST: api/Franchise
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Franchise>> PostFranchise(Franchise franchise)
-        //{
-        //  if (FranchiseService.Franchises == null)
-        //  {
-        //      return Problem("Entity set 'MovieDbContext.Franchises'  is null.");
-        //  }
-        //    FranchiseService.Franchises.Add(franchise);
-        //    await FranchiseService.SaveChangesAsync();
+        // POST: api/Franchise
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Franchise>> PostFranchise(Franchise franchise)
+        {
+            var addedFrannchise = await _franchiseService.CreateAsync(franchise);
 
-        //    return CreatedAtAction("GetFranchise", new { id = franchise.Id }, franchise);
-        //}
+            return CreatedAtAction("Added franchise", addedFrannchise);
+        }
 
         //// DELETE: api/Franchise/5
         //[HttpDelete("{id}")]
