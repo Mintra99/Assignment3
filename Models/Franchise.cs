@@ -6,12 +6,11 @@ namespace Assignment3.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         // Navigation property to relate franchises to movies
-        public ICollection<Movie> Movies { get; set; }
+        public ICollection<Movie> Movies { get; set; } = null!;
     }
 }
