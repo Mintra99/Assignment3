@@ -1,7 +1,9 @@
-﻿using Assignment3.Models;
+﻿using Assignment3.Exceptionhandler;
+using Assignment3.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Assignment3.Services.Characters
@@ -32,17 +34,36 @@ namespace Assignment3.Services.Characters
 
         public async Task<Character> GetByIdAsync(int id)
         {
-            return await _context.Characters.FindAsync(id);
+            var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id);
+            Console.WriteLine(character);
+
+            if (character == null)
+            {
+                throw new NotFoundException($"{nameof(Character)} with ID {id} not found");
+            }
+
+            return character;
         }
 
         public async Task<Character> UpdateAsync(Character entity)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            var existingCharacter = await _context.Characters.FirstOrDefaultAsync(c => c.Id == entity.Id);
 
-            _context.Entry(entity).State = EntityState.Modified;
+            if (existingCharacter == null)
+            {
+                throw new NotFoundException($"{nameof(Character)} with ID {entity.Id} not found");
+            }
+
+            // Update the properties of the existing character
+            existingCharacter.FullName = entity.FullName;
+            existingCharacter.Alias = entity.Alias;
+            existingCharacter.Gender = entity.Gender;
+            existingCharacter.PictureUrl = entity.PictureUrl;
+
+            // Save changes to the database
             await _context.SaveChangesAsync();
-            return entity;
+
+            return existingCharacter;
         }
     }
 }
