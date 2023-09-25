@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Assignment3.Models;
 using Assignment3.Services.Franchises;
+using AutoMapper;
+using Assignment3.Data.Dtos.Franchises;
 
 namespace Assignment3.Controllers
 {
@@ -18,10 +20,12 @@ namespace Assignment3.Controllers
     public class FranchiseController : ControllerBase
     {
         private readonly IFranchiseService _franchiseService;
+        private readonly IMapper _mapper;
 
-        public FranchiseController(IFranchiseService franchiseService)
+        public FranchiseController(IFranchiseService franchiseService, IMapper mapper)
         {
             _franchiseService = franchiseService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -29,35 +33,25 @@ namespace Assignment3.Controllers
         /// </summary>
         /// <returns>All franchises</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Franchise>>> GetFranchises()
+        public async Task<ActionResult<IEnumerable<FranchiseDto>>> GetFranchises()
         {
             var franchises = await _franchiseService.GetAsync();
 
-            if (franchises == null)
+            return Ok(_mapper.Map<IEnumerable<FranchiseDto>>(franchises));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FranchiseDto>> GetFranchise(int id)
+        {
+            var franchise = await _franchiseService.GetByIdAsync(id);
+            if (franchise == null)
             {
                 return NotFound();
             }
 
-            return franchises;
+            
+            return _mapper.Map<FranchiseDto>(franchise);
         }
-
-        // GET: api/Franchise/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Franchise>> GetFranchise(int id)
-        //{
-        //  if (FranchiseService.Franchises == null)
-        //  {
-        //      return NotFound();
-        //  }
-        //    var franchise = await FranchiseService.Franchises.FindAsync(id);
-
-        //    if (franchise == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return franchise;
-        //}
 
         //// PUT: api/Franchise/5
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -93,11 +87,16 @@ namespace Assignment3.Controllers
         // POST: api/Franchise
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Franchise>> PostFranchise(Franchise franchise)
+        public async Task<ActionResult<FranchiseDto>> PostFranchise(FranchisePostDto franchise)
         {
-            var addedFrannchise = await _franchiseService.CreateAsync(franchise);
+            var franchiseToAdd = _mapper.Map<Franchise>(franchise);
+            var addedFrannchise = await _franchiseService.CreateAsync(franchiseToAdd);
 
-            return CreatedAtAction("Added franchise", addedFrannchise);
+
+            return CreatedAtAction(
+                nameof(GetFranchise),
+                new { id = addedFrannchise.Id},
+                _mapper.Map<FranchiseDto>(addedFrannchise));
         }
 
         //// DELETE: api/Franchise/5

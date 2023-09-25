@@ -28,14 +28,28 @@ namespace Assignment3.Services.Franchises
 
         public async Task<List<Franchise>> GetAsync()
         {
-            var franchises = await _db.Franchises.ToListAsync();
+            var franchises = await _db.Franchises
+                .Include(f => f.Movies)
+                .ToListAsync();
 
             return franchises;
         }
 
         public Task<Franchise> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var franchise = _db.Franchises
+                    .Include(f => f.Movies)
+                    .SingleOrDefaultAsync(f => f.Id == id);
+
+                return franchise!;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public Task<Franchise> UpdateAsync(Franchise entity)
