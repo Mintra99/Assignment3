@@ -53,36 +53,24 @@ namespace Assignment3.Controllers
             return _mapper.Map<FranchiseDto>(franchise);
         }
 
-        //// PUT: api/Franchise/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutFranchise(int id, Franchise franchise)
-        //{
-        //    if (id != franchise.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutFranchise(int id, FranchisePutDto franchise)
+        {
+            if (id != franchise.Id)
+            {
+                return BadRequest();
+            }
 
-        //    FranchiseService.Entry(franchise).State = EntityState.Modified;
+            var franchiseToUpdate = _mapper.Map<Franchise>(franchise);
+            var updatedFranchise = await _franchiseService.UpdateAsync(franchiseToUpdate);
 
-        //    try
-        //    {
-        //        await FranchiseService.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!FranchiseExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            if (updatedFranchise == null)
+            {
+                return NotFound();
+            }
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         // POST: api/Franchise
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

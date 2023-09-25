@@ -52,9 +52,29 @@ namespace Assignment3.Services.Franchises
             }
         }
 
-        public Task<Franchise> UpdateAsync(Franchise entity)
+        // !!! HANLE IF NUL BETTER !!! 
+        public async Task<Franchise> UpdateAsync(Franchise entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var franchise = await _db.Franchises.SingleOrDefaultAsync(f => f.Id == entity.Id);
+                if (franchise == null)
+                {
+                    return null;
+                } 
+                else
+                {
+                    franchise!.Name = entity.Name;
+                    franchise!.Description = entity.Description;
+                    await _db.SaveChangesAsync();
+                    return franchise!;
+                }
+            }
+            catch (SqlException err)
+            {
+                Console.WriteLine(err.Message);
+                throw;
+            }
         }
     }
 }

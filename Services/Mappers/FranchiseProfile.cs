@@ -14,6 +14,7 @@ namespace Assignment3.Services.Mappers
                         .Select(f => f.Id).ToList()));
 
             CreateMap<FranchisePostDto, Franchise>();
+            CreateMap<FranchisePutDto, Franchise>();
         }
     }
 }
