@@ -10,7 +10,7 @@ using Assignment3.Services.Franchises;
 
 namespace Assignment3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/Franchise")]
     [ApiController]
     public class FranchiseController : ControllerBase
     {

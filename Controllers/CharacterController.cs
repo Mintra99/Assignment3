@@ -9,7 +9,7 @@ using Assignment3.Models;
 
 namespace Assignment3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/Character")]
     [ApiController]
     public class CharacterController : ControllerBase
     {

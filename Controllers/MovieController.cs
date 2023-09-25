@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Assignment3.Controllers
 {
     [ApiController]
-    [Route("api/Movies")]
-    public class MoviesController : ControllerBase
+    [Route("api/v1/Movie")]
+    public class MovieController : ControllerBase
     {
         private readonly MovieDbContext _context;
 
-        public MoviesController(MovieDbContext context)
+        public MovieController(MovieDbContext context)
         {
             _context = context;
         }
