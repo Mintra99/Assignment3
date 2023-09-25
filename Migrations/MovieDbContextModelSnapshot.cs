@@ -47,6 +47,31 @@ namespace Assignment3.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Characters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Alias = "Iron Man",
+                            FullName = "Tony Stark",
+                            Gender = "Male",
+                            PictureUrl = "https://example.com/tony-stark.jpg"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FullName = "Frodo Baggins",
+                            Gender = "Male",
+                            PictureUrl = "https://example.com/frodo-baggins.jpg"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Alias = "Batman",
+                            FullName = "Bruce Wayne",
+                            Gender = "Male",
+                            PictureUrl = "https://example.com/bruce-wayne.jpg"
+                        });
                 });
 
             modelBuilder.Entity("Assignment3.Models.Franchise", b =>
@@ -68,6 +93,26 @@ namespace Assignment3.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Franchises");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "A cinematic universe of superhero films",
+                            Name = "Marvel Cinematic Universe"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "A high-fantasy epic film series",
+                            Name = "The Lord of the Rings"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "A set of three Christopher Nolan Batman movies",
+                            Name = "The Dark Knight Series"
+                        });
                 });
 
             modelBuilder.Entity("Assignment3.Movie", b =>
@@ -109,21 +154,73 @@ namespace Assignment3.Migrations
                     b.HasIndex("FranchiseId");
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Director = "Jon Favreau",
+                            FranchiseId = 1,
+                            Genre = "Action, Adventure, Sci-Fi",
+                            MovieTitle = "Iron Man",
+                            PictureUrl = "https://example.com/ironman-poster.jpg",
+                            ReleaseYear = 2008,
+                            TrailerUrl = "https://www.youtube.com/watch?v=8ugaeA-nMTc"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Director = "Peter Jackson",
+                            FranchiseId = 2,
+                            Genre = "Action, Adventure, Drama",
+                            MovieTitle = "The Lord of the Rings: The Fellowship of the Ring",
+                            PictureUrl = "https://example.com/lotr-poster.jpg",
+                            ReleaseYear = 2001,
+                            TrailerUrl = "https://www.youtube.com/watch?v=_nZdmwHrcnw"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Director = "Christopher Nolan",
+                            FranchiseId = 3,
+                            Genre = "Action, Drama, Thriller, Crime",
+                            MovieTitle = "The Dark Knight",
+                            PictureUrl = "https://example.com/thedarkknight-poster.jpg",
+                            ReleaseYear = 2008,
+                            TrailerUrl = "https://www.youtube.com/watch?v=UXmBT9JtuLo"
+                        });
                 });
 
-            modelBuilder.Entity("CharacterMovie", b =>
+            modelBuilder.Entity("MovieCharacter", b =>
                 {
-                    b.Property<int>("MovieCharactersId")
+                    b.Property<int>("MovieId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MoviesId")
+                    b.Property<int>("CharacterId")
                         .HasColumnType("int");
 
-                    b.HasKey("MovieCharactersId", "MoviesId");
+                    b.HasKey("MovieId", "CharacterId");
 
-                    b.HasIndex("MoviesId");
+                    b.HasIndex("CharacterId");
 
-                    b.ToTable("CharacterMovie");
+                    b.ToTable("MovieCharacter");
+
+                    b.HasData(
+                        new
+                        {
+                            MovieId = 1,
+                            CharacterId = 1
+                        },
+                        new
+                        {
+                            MovieId = 2,
+                            CharacterId = 2
+                        },
+                        new
+                        {
+                            MovieId = 3,
+                            CharacterId = 3
+                        });
                 });
 
             modelBuilder.Entity("Assignment3.Movie", b =>
@@ -137,17 +234,17 @@ namespace Assignment3.Migrations
                     b.Navigation("Franchise");
                 });
 
-            modelBuilder.Entity("CharacterMovie", b =>
+            modelBuilder.Entity("MovieCharacter", b =>
                 {
                     b.HasOne("Assignment3.Models.Character", null)
                         .WithMany()
-                        .HasForeignKey("MovieCharactersId")
+                        .HasForeignKey("CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Assignment3.Movie", null)
                         .WithMany()
-                        .HasForeignKey("MoviesId")
+                        .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

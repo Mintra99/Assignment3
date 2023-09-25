@@ -24,7 +24,7 @@ namespace Assignment3
         public int FranchiseId { get; set; }
 
         // Navigation property to relate movies to characters
-        public ICollection<Character> MovieCharacters { get; set; }
+        public ICollection<Character> Characters { get; set; }
 
         // Navigation property to relate movies to franchises
         public Franchise Franchise { get; set; }
