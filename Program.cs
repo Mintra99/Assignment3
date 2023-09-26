@@ -17,13 +17,6 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddCors();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSwagger",
-        builder => builder.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod());
-});
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -60,7 +53,12 @@ builder.Services.AddSwaggerGen(options =>
 
 
 var app = builder.Build();
-app.UseCors("AllowSwagger");
+app.UseCors(o =>
+       o.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()
+);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
