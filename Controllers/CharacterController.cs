@@ -72,19 +72,20 @@ namespace Assignment3.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCharacter(int id, CharacterPutDTO character)
         {
-            var existingCharacters = await _characterService.GetByIdAsync(id);
-
-            if (id != character.Id || existingCharacters == null)
+            if (id != character.Id)
             {
-                var notFoundResponse = new NotFoundResponse($"Character with ID {id} not found.");
-                return NotFound(notFoundResponse);
+                return BadRequest();
             }
 
             try
             {
                 var characterToUpdate = _mapper.Map<Character>(character);
                 var updatedCharacter = await _characterService.UpdateAsync(characterToUpdate);
-                
+                if (updatedCharacter == null) 
+                {
+                    var notFoundResponse = new NotFoundResponse($"Character with ID {id} not found.");
+                    return NotFound(notFoundResponse);
+                }
                 return NoContent();
             }
             catch (EntityNotFoundException ex)
