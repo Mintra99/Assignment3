@@ -10,6 +10,7 @@ using Assignment3.Services.Franchises;
 using AutoMapper;
 using Assignment3.Data.Dtos.Franchises;
 using Assignment3.Data.Dtos.Movies;
+using Assignment3.Exceptionhandler;
 
 namespace Assignment3.Controllers
 {
@@ -113,6 +114,25 @@ namespace Assignment3.Controllers
             else
             {
                 return Ok(_mapper.Map<IEnumerable<MovieDto>>(movies));
+            }
+        }
+
+        [HttpPut("{id}/movies")]
+        public async Task<ActionResult> PutFranchiseMovies(int id, [FromBody] int[] movieIds)
+        {
+            try
+            {
+                await _franchiseService.UpdateMoviesAsync(id, movieIds);
+                return NoContent();
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new {
+                    type="Error",
+                    title="Not found",
+                    status=404,
+                    detail=err.Message
+                });
             }
         }
     }
