@@ -12,6 +12,7 @@ using Assignment3.Data.Dtos.Franchises;
 using Assignment3.Data.Dtos.Movies;
 using Assignment3.Exceptionhandler;
 using Assignment3.Data.Dtos.Characters;
+using Assignment3.Helpers;
 
 namespace Assignment3.Controllers
 {
@@ -148,12 +149,7 @@ namespace Assignment3.Controllers
             }
             catch (EntityNotFoundException err)
             {
-                return NotFound(new {
-                    type="Error",
-                    title="Not found",
-                    status=404,
-                    detail=err.Message
-                });
+                return NotFound(new NotFoundResponse(err.Message));
             }
         }
     }
