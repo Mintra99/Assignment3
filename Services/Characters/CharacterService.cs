@@ -1,5 +1,6 @@
 ﻿using Assignment3.Exceptionhandler;
 using Assignment3.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,56 +20,92 @@ namespace Assignment3.Services.Characters
 
         public async Task<Character> CreateAsync(Character entity)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-
-            _context.Characters.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity;
+            try
+            {
+                await _context.Characters.AddAsync(entity);
+                await _context.SaveChangesAsync();
+                return entity;
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public async Task<List<Character>> GetAsync()
         {
-            return await _context.Characters.ToListAsync();
+            var characters = await _context.Characters
+                .Include(c => c.Movies)
+                .ToListAsync();
+
+            return characters;
         }
 
         public async Task<Character> GetByIdAsync(int id)
         {
-            var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id);
-            Console.WriteLine(character);
-
-            if (character == null)
+            try
             {
-                throw new NotFoundException($"{nameof(Character)} with ID {id} not found");
-            }
+                var character = _context.Characters
+                    .Include(c => c.Movies)
+                    .SingleOrDefaultAsync(c => c.Id == id);
 
-            return character;
+                return await character!;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public async Task<Character> UpdateAsync(Character entity)
         {
-            var existingCharacter = await _context.Characters.FirstOrDefaultAsync(c => c.Id == entity.Id);
-
-            if (existingCharacter == null)
+            try
             {
-                throw new NotFoundException($"{nameof(Character)} with ID {entity.Id} not found");
+                var character = await _context.Characters.SingleOrDefaultAsync(c => c.Id == entity.Id);
+                if (character == null)
+                {
+                    return null!;
+                }
+                else
+                {
+                    character!.FullName = entity.FullName;
+                    character!.Alias = entity.Alias;
+                    character!.Gender = entity.Gender;
+                    character!.PictureUrl = entity.PictureUrl;
+                    await _context.SaveChangesAsync();
+                    return character!;
+                }
             }
-
-            // Update the properties of the existing character
-            existingCharacter.FullName = entity.FullName;
-            existingCharacter.Alias = entity.Alias;
-            existingCharacter.Gender = entity.Gender;
-            existingCharacter.PictureUrl = entity.PictureUrl;
-
-            // Save changes to the database
-            await _context.SaveChangesAsync();
-
-            return existingCharacter;
+            catch (SqlException err)
+            {
+                Console.WriteLine(err.Message);
+                throw;
+            }
         }
 
-        public Task<Character> DeleteAsync(int id)
+        public async  Task<Character> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var characterToDelete = await _context.Characters.SingleOrDefaultAsync(c => c.Id == id);
+
+                if (characterToDelete == null)
+                {
+                    return null!;
+                }
+                else
+                {
+                    _context.Remove(characterToDelete);
+                    await _context.SaveChangesAsync();
+                    return characterToDelete;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
     }
 }
