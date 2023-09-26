@@ -1,18 +1,13 @@
-﻿using Assignment3.Exceptionhandler;
-using Assignment3.Models;
+﻿using Assignment3.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Assignment3.Services.Characters
 {
     public class CharacterService : ICharacterService
     {
         private readonly MovieDbContext _context;
-
         public CharacterService(MovieDbContext context)
         {
             _context = context;
@@ -25,7 +20,8 @@ namespace Assignment3.Services.Characters
                 await _context.Characters.AddAsync(entity);
                 await _context.SaveChangesAsync();
                 return entity;
-            } catch (Exception ex)
+            } 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 throw;
