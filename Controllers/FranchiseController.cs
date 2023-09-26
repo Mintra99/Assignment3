@@ -47,14 +47,17 @@ namespace Assignment3.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<FranchiseDto>> GetFranchise(int id)
         {
-            var franchise = await _franchiseService.GetByIdAsync(id);
-            if (franchise == null)
+            try
             {
-                return NotFound();
+                var franchise = await _franchiseService.GetByIdAsync(id);
+                return _mapper.Map<FranchiseDto>(franchise);
+            }
+            catch (Exception err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
 
             
-            return _mapper.Map<FranchiseDto>(franchise);
         }
 
         [HttpPut("{id}")]
@@ -66,14 +69,18 @@ namespace Assignment3.Controllers
             }
 
             var franchiseToUpdate = _mapper.Map<Franchise>(franchise);
-            var updatedFranchise = await _franchiseService.UpdateAsync(franchiseToUpdate);
 
-            if (updatedFranchise == null)
+            try
             {
-                return NotFound();
+                var updatedFranchise = await _franchiseService.UpdateAsync(franchiseToUpdate);
+                return NoContent();
+
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
 
-            return NoContent();
         }
 
 
@@ -93,29 +100,32 @@ namespace Assignment3.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFranchise(int id)
         {
-            var deletedFranchise = await _franchiseService.DeleteAsync(id);
 
 
-            if (deletedFranchise == null)
+            try
             {
-                return NotFound();
+                var deletedFranchise = await _franchiseService.DeleteAsync(id);
+
+                return Ok();
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
 
-            return Ok();
         }
 
         [HttpGet("{id}/movies")]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies(int id)
         {
-            var movies = await _franchiseService.GetMoviesAsync(id);
-            Console.WriteLine(movies);
-            if (movies == null)
+            try
             {
-                return NotFound();
-            }
-            else
-            {
+                var movies = await _franchiseService.GetMoviesAsync(id);
                 return Ok(_mapper.Map<IEnumerable<MovieDto>>(movies));
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
         }
 
@@ -129,12 +139,7 @@ namespace Assignment3.Controllers
             }
             catch (EntityNotFoundException err)
             {
-                return NotFound(new {
-                    type="Error",
-                    title="Not found",
-                    status=404,
-                    detail=err.Message
-                });
+                return NotFound(new NotFoundResponse(err.Message));
             }
         }
 
