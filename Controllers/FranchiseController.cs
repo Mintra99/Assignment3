@@ -44,6 +44,11 @@ namespace Assignment3.Controllers
             return Ok(_mapper.Map<IEnumerable<FranchiseDto>>(franchises));
         }
 
+        /// <summary>
+        /// Gets a specific franchise by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to retrieve.</param>
+        /// <returns>Returns the franchise with the specified ID.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<FranchiseDto>> GetFranchise(int id)
         {
@@ -60,6 +65,12 @@ namespace Assignment3.Controllers
             
         }
 
+        /// <summary>
+        /// Updates an existing franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to update.</param>
+        /// <param name="franchise">The updated franchise data.</param>
+        /// <returns>Returns NoContent if the update is successful.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFranchise(int id, FranchisePutDto franchise)
         {
@@ -83,7 +94,11 @@ namespace Assignment3.Controllers
 
         }
 
-
+        /// <summary>
+        /// Creates a new franchise.
+        /// </summary>
+        /// <param name="franchise">The franchise data to create.</param>
+        /// <returns>Returns the newly created franchise.</returns>
         [HttpPost]
         public async Task<ActionResult<FranchiseDto>> PostFranchise(FranchisePostDto franchise)
         {
@@ -97,11 +112,14 @@ namespace Assignment3.Controllers
                 _mapper.Map<FranchiseDto>(addedFrannchise));
         }
 
+        /// <summary>
+        /// Deletes a franchise by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to delete.</param>
+        /// <returns>Returns Ok if the deletion is successful.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFranchise(int id)
         {
-
-
             try
             {
                 var deletedFranchise = await _franchiseService.DeleteAsync(id);
@@ -115,6 +133,11 @@ namespace Assignment3.Controllers
 
         }
 
+        /// <summary>
+        /// Gets all movies associated with a specific franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to retrieve movies for.</param>
+        /// <returns>Returns a list of movies associated with the franchise.</returns>
         [HttpGet("{id}/movies")]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies(int id)
         {
@@ -129,6 +152,12 @@ namespace Assignment3.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates the list of movies associated with a franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to update movies for.</param>
+        /// <param name="movieIds">An array of movie IDs to associate with the franchise.</param>
+        /// <returns>Returns NoContent if the update is successful.</returns>
         [HttpPut("{id}/movies")]
         public async Task<ActionResult> PutFranchiseMovies(int id, [FromBody] int[] movieIds)
         {
@@ -143,6 +172,11 @@ namespace Assignment3.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all characters associated with a specific franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to retrieve characters for.</param>
+        /// <returns>Returns a list of characters associated with the franchise.</returns>
         [HttpGet("{id}/characters")]
         public async Task<ActionResult<IEnumerable<CharacterDto>>> GetFranchiseCharacters(int id)
         {

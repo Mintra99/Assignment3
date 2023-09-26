@@ -179,10 +179,23 @@ namespace Assignment3.Services.Franchises
             return characters;
         }
 
+        // Helper functions
+
+        /// <summary>
+        /// Checks if a franchise with the specified id exists in the database
+        /// </summary>
+        /// <param name="id">The id of the franchise to check</param>
+        /// <returns><c>true</c> if a franchise with the specified id exists; otherwise, <c>false</c></returns>
         public async Task<bool> FranchiseExistsAsync(int id)
         {
             return await _db.Franchises.AnyAsync(f => f.Id == id);
         }
+
+        /// <summary>
+        /// Checks if a movie with the specified id exists in the database
+        /// </summary>
+        /// <param name="id">The id of the movie to check</param>
+        /// <returns><c>true</c> if a movie with the specified id exists; otherwise, <c>false</c></returns>
         public async Task<bool> MovieExistsAsync(int id)
         {
             return await _db.Movies.AnyAsync(f => f.Id == id);
