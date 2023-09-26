@@ -65,5 +65,10 @@ namespace Assignment3.Services.Characters
 
             return existingCharacter;
         }
+
+        public Task<Character> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

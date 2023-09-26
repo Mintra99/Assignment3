@@ -52,7 +52,6 @@ namespace Assignment3.Services.Franchises
             }
         }
 
-        // !!! HANLE IF NUL BETTER !!! 
         public async Task<Franchise> UpdateAsync(Franchise entity)
         {
             try
@@ -60,7 +59,7 @@ namespace Assignment3.Services.Franchises
                 var franchise = await _db.Franchises.SingleOrDefaultAsync(f => f.Id == entity.Id);
                 if (franchise == null)
                 {
-                    return null;
+                    return null!;
                 } 
                 else
                 {
@@ -73,6 +72,30 @@ namespace Assignment3.Services.Franchises
             catch (SqlException err)
             {
                 Console.WriteLine(err.Message);
+                throw;
+            }
+        }
+
+        public async Task<Franchise> DeleteAsync(int id)
+        {
+            try
+            {
+                var franchiseToDelete = await _db.Franchises.SingleOrDefaultAsync(f => f.Id == id);
+
+                if(franchiseToDelete == null)
+                {
+                    return null!;
+                }
+                else
+                {
+                    _db.Remove(franchiseToDelete);
+                    await _db.SaveChangesAsync();
+                    return franchiseToDelete;
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }

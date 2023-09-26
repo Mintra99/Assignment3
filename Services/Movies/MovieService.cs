@@ -23,5 +23,9 @@ namespace Assignment3.Services.Movies
         {
             throw new NotImplementedException();
         }
+        public Task<Movie> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
