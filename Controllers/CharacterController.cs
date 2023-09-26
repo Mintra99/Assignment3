@@ -50,7 +50,7 @@ namespace Assignment3.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCharacter(int id, Character character)
+        public async Task<IActionResult> PutCharacter(int id, CharacterPutDTO character)
         {
             if (id != character.Id)
             {
@@ -59,24 +59,26 @@ namespace Assignment3.Controllers
 
             try
             {
-                await _characterService.UpdateAsync(_mapper.Map<Character>(character));
+                var characterToUpdate = _mapper.Map<Character>(character);
+                var updatedCharacter = await _characterService.UpdateAsync(characterToUpdate);
+                
+                return NoContent();
             }
             catch (EntityNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
-
-            return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult<CharacterDto>> PostCharacter(Character character)
+        public async Task<ActionResult<CharacterDto>> PostCharacter(CharacterPostDTO character)
         {
-         var newCharacter = await _characterService.CreateAsync(_mapper.Map<Character>(character));
+            var characterToAdd = _mapper.Map<Character>(character);
+            var addedCharacter = await _characterService.CreateAsync(characterToAdd);
 
             return CreatedAtAction("GetCharacter", 
-                new { id = newCharacter.Id },
-                _mapper.Map<CharacterDto>(newCharacter));
+                new { id = addedCharacter.Id },
+                _mapper.Map<CharacterDto>(addedCharacter));
         }
 
         [HttpDelete("{id}")]
