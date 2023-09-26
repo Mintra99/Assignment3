@@ -72,8 +72,7 @@ namespace Assignment3.Controllers
             return NoContent();
         }
 
-        // POST: api/Franchise
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<FranchiseDto>> PostFranchise(FranchisePostDto franchise)
         {
@@ -87,29 +86,19 @@ namespace Assignment3.Controllers
                 _mapper.Map<FranchiseDto>(addedFrannchise));
         }
 
-        //// DELETE: api/Franchise/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteFranchise(int id)
-        //{
-        //    if (FranchiseService.Franchises == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var franchise = await FranchiseService.Franchises.FindAsync(id);
-        //    if (franchise == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFranchise(int id)
+        {
+            var deletedFranchise = await _franchiseService.DeleteAsync(id);
 
-        //    FranchiseService.Franchises.Remove(franchise);
-        //    await FranchiseService.SaveChangesAsync();
 
-        //    return NoContent();
-        //}
+            if (deletedFranchise == null)
+            {
+                return NotFound();
+            }
 
-        //private bool FranchiseExists(int id)
-        //{
-        //    return (FranchiseService.Franchises?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
+            return Ok();
+        }
+
     }
 }
