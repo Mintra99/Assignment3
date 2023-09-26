@@ -36,11 +36,17 @@ namespace Assignment3.Services.Franchises
             return franchises;
         }
 
-        public Task<Franchise> GetByIdAsync(int id)
+        public async Task<Franchise> GetByIdAsync(int id)
         {
+
+            if(!await FranchiseExistsAsync(id))
+            {
+                throw new EntityNotFoundException("Franchise", id);
+            }
+
             try
             {
-                var franchise = _db.Franchises
+                var franchise = await _db.Franchises
                     .Include(f => f.Movies)
                     .SingleOrDefaultAsync(f => f.Id == id);
 
@@ -55,20 +61,16 @@ namespace Assignment3.Services.Franchises
 
         public async Task<Franchise> UpdateAsync(Franchise entity)
         {
+            if (!await FranchiseExistsAsync(entity.Id))
+            {
+                throw new EntityNotFoundException("Franchise", entity.Id);
+            }
+
             try
             {
-                var franchise = await _db.Franchises.SingleOrDefaultAsync(f => f.Id == entity.Id);
-                if (franchise == null)
-                {
-                    return null!;
-                } 
-                else
-                {
-                    franchise!.Name = entity.Name;
-                    franchise!.Description = entity.Description;
-                    await _db.SaveChangesAsync();
-                    return franchise!;
-                }
+                _db.Entry(entity).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
+                return entity;
             }
             catch (SqlException err)
             {
@@ -79,20 +81,18 @@ namespace Assignment3.Services.Franchises
 
         public async Task<Franchise> DeleteAsync(int id)
         {
+            if (!await FranchiseExistsAsync(id))
+            {
+                throw new EntityNotFoundException("Franchise", id);
+            }
+
             try
             {
-                var franchiseToDelete = await _db.Franchises.SingleOrDefaultAsync(f => f.Id == id);
+                var franchiseToDelete = await _db.Franchises.SingleAsync(f => f.Id == id);
 
-                if(franchiseToDelete == null)
-                {
-                    return null!;
-                }
-                else
-                {
-                    _db.Remove(franchiseToDelete);
-                    await _db.SaveChangesAsync();
-                    return franchiseToDelete;
-                }
+                _db.Remove(franchiseToDelete);
+                await _db.SaveChangesAsync();
+                return franchiseToDelete;
             }
             catch (SqlException ex)
             {
@@ -105,8 +105,9 @@ namespace Assignment3.Services.Franchises
         {
             if (!await FranchiseExistsAsync(id))
             {
-                return null!;
+                throw new EntityNotFoundException("Franchise", id);
             }
+
             try
             {
                 var movies = await _db.Movies
@@ -177,10 +178,24 @@ namespace Assignment3.Services.Franchises
             
             return characters;
         }
+
+        // Helper functions
+
+        /// <summary>
+        /// Checks if a franchise with the specified id exists in the database
+        /// </summary>
+        /// <param name="id">The id of the franchise to check</param>
+        /// <returns><c>true</c> if a franchise with the specified id exists; otherwise, <c>false</c></returns>
         public async Task<bool> FranchiseExistsAsync(int id)
         {
             return await _db.Franchises.AnyAsync(f => f.Id == id);
         }
+
+        /// <summary>
+        /// Checks if a movie with the specified id exists in the database
+        /// </summary>
+        /// <param name="id">The id of the movie to check</param>
+        /// <returns><c>true</c> if a movie with the specified id exists; otherwise, <c>false</c></returns>
         public async Task<bool> MovieExistsAsync(int id)
         {
             return await _db.Movies.AnyAsync(f => f.Id == id);

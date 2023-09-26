@@ -44,19 +44,33 @@ namespace Assignment3.Controllers
             return Ok(_mapper.Map<IEnumerable<FranchiseDto>>(franchises));
         }
 
+        /// <summary>
+        /// Gets a specific franchise by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to retrieve.</param>
+        /// <returns>Returns the franchise with the specified ID.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<FranchiseDto>> GetFranchise(int id)
         {
-            var franchise = await _franchiseService.GetByIdAsync(id);
-            if (franchise == null)
+            try
             {
-                return NotFound();
+                var franchise = await _franchiseService.GetByIdAsync(id);
+                return _mapper.Map<FranchiseDto>(franchise);
+            }
+            catch (Exception err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
 
             
-            return _mapper.Map<FranchiseDto>(franchise);
         }
 
+        /// <summary>
+        /// Updates an existing franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to update.</param>
+        /// <param name="franchise">The updated franchise data.</param>
+        /// <returns>Returns NoContent if the update is successful.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutFranchise(int id, FranchisePutDto franchise)
         {
@@ -66,17 +80,25 @@ namespace Assignment3.Controllers
             }
 
             var franchiseToUpdate = _mapper.Map<Franchise>(franchise);
-            var updatedFranchise = await _franchiseService.UpdateAsync(franchiseToUpdate);
 
-            if (updatedFranchise == null)
+            try
             {
-                return NotFound();
+                var updatedFranchise = await _franchiseService.UpdateAsync(franchiseToUpdate);
+                return NoContent();
+
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
 
-            return NoContent();
         }
 
-
+        /// <summary>
+        /// Creates a new franchise.
+        /// </summary>
+        /// <param name="franchise">The franchise data to create.</param>
+        /// <returns>Returns the newly created franchise.</returns>
         [HttpPost]
         public async Task<ActionResult<FranchiseDto>> PostFranchise(FranchisePostDto franchise)
         {
@@ -90,35 +112,52 @@ namespace Assignment3.Controllers
                 _mapper.Map<FranchiseDto>(addedFrannchise));
         }
 
+        /// <summary>
+        /// Deletes a franchise by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to delete.</param>
+        /// <returns>Returns Ok if the deletion is successful.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFranchise(int id)
         {
-            var deletedFranchise = await _franchiseService.DeleteAsync(id);
-
-
-            if (deletedFranchise == null)
+            try
             {
-                return NotFound();
+                var deletedFranchise = await _franchiseService.DeleteAsync(id);
+
+                return Ok();
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
 
-            return Ok();
         }
 
+        /// <summary>
+        /// Gets all movies associated with a specific franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to retrieve movies for.</param>
+        /// <returns>Returns a list of movies associated with the franchise.</returns>
         [HttpGet("{id}/movies")]
         public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies(int id)
         {
-            var movies = await _franchiseService.GetMoviesAsync(id);
-            Console.WriteLine(movies);
-            if (movies == null)
+            try
             {
-                return NotFound();
-            }
-            else
-            {
+                var movies = await _franchiseService.GetMoviesAsync(id);
                 return Ok(_mapper.Map<IEnumerable<MovieDto>>(movies));
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
             }
         }
 
+        /// <summary>
+        /// Updates the list of movies associated with a franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to update movies for.</param>
+        /// <param name="movieIds">An array of movie IDs to associate with the franchise.</param>
+        /// <returns>Returns NoContent if the update is successful.</returns>
         [HttpPut("{id}/movies")]
         public async Task<ActionResult> PutFranchiseMovies(int id, [FromBody] int[] movieIds)
         {
@@ -129,15 +168,15 @@ namespace Assignment3.Controllers
             }
             catch (EntityNotFoundException err)
             {
-                return NotFound(new {
-                    type="Error",
-                    title="Not found",
-                    status=404,
-                    detail=err.Message
-                });
+                return NotFound(new NotFoundResponse(err.Message));
             }
         }
 
+        /// <summary>
+        /// Gets all characters associated with a specific franchise.
+        /// </summary>
+        /// <param name="id">The ID of the franchise to retrieve characters for.</param>
+        /// <returns>Returns a list of characters associated with the franchise.</returns>
         [HttpGet("{id}/characters")]
         public async Task<ActionResult<IEnumerable<CharacterDto>>> GetFranchiseCharacters(int id)
         {
