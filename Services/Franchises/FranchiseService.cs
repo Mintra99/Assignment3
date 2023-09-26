@@ -152,6 +152,31 @@ namespace Assignment3.Services.Franchises
             await _db.SaveChangesAsync();
         }
 
+        public async Task<List<Character>> GetCharactersAsync(int id)
+        {
+            if (!await FranchiseExistsAsync(id))
+            {
+                throw new EntityNotFoundException("Franchise", id);
+            }
+
+            List<Character> characters = new List<Character>();
+
+            var movies = await _db.Movies
+                .Include(m => m.Characters)
+                .Where(m => m.FranchiseId == id)
+                .ToListAsync();
+
+
+            foreach( var movie in movies)
+            {
+                foreach (var character in movie.Characters!)
+                {
+                    characters.Add(character);
+                }
+            }
+            
+            return characters;
+        }
         public async Task<bool> FranchiseExistsAsync(int id)
         {
             return await _db.Franchises.AnyAsync(f => f.Id == id);

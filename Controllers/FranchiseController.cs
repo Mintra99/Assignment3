@@ -11,6 +11,7 @@ using AutoMapper;
 using Assignment3.Data.Dtos.Franchises;
 using Assignment3.Data.Dtos.Movies;
 using Assignment3.Exceptionhandler;
+using Assignment3.Data.Dtos.Characters;
 
 namespace Assignment3.Controllers
 {
@@ -124,6 +125,26 @@ namespace Assignment3.Controllers
             {
                 await _franchiseService.UpdateMoviesAsync(id, movieIds);
                 return NoContent();
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new {
+                    type="Error",
+                    title="Not found",
+                    status=404,
+                    detail=err.Message
+                });
+            }
+        }
+
+        [HttpGet("{id}/characters")]
+        public async Task<ActionResult<IEnumerable<CharacterDto>>> GetFranchiseCharacters(int id)
+        {
+            try
+            {
+                var characters = await _franchiseService.GetCharactersAsync(id);
+                var charDto = _mapper.Map<IEnumerable<CharacterDto>>(characters);
+                return Ok(charDto);
             }
             catch (EntityNotFoundException err)
             {

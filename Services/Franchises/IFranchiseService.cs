@@ -7,5 +7,7 @@ namespace Assignment3.Services.Franchises
     {
         Task<List<Movie>> GetMoviesAsync(int id);
         Task UpdateMoviesAsync(int id, int[] movies);
+        Task<List<Character>> GetCharactersAsync(int id);
+
     }
 }
