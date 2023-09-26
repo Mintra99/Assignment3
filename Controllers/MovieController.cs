@@ -1,4 +1,7 @@
+using Assignment3.Data.Dtos.Movies;
 using Assignment3.Models;
+using Assignment3.Services.Movies;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,93 +11,85 @@ namespace Assignment3.Controllers
     [Route("api/v1/Movie")]
     public class MovieController : ControllerBase
     {
-        private readonly MovieDbContext _context;
+        private readonly IMovieService _movieService;
+        private readonly IMapper _mapper;
 
-        public MovieController(MovieDbContext context)
+        public MovieController(IMovieService movieService, IMapper mapper)
         {
-            _context = context;
+            _movieService = movieService;
+            _mapper = mapper;
         }
 
-        // GET: api/Movies
+        /// <summary>
+        /// Gets all movies
+        /// </summary>
+        /// <returns>All movies</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
         {
-            return await _context.Movies.ToListAsync();
+            var movies = await _movieService.GetAsync();
+
+            return Ok(_mapper.Map<IEnumerable<MovieDto>>(movies));
         }
 
-        // GET: api/Movies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<MovieDto>> GetMovie(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
-
+            var movie = await _movieService.GetByIdAsync(id);
             if (movie == null)
             {
                 return NotFound();
             }
 
-            return movie;
+
+            return _mapper.Map<MovieDto>(movie);
         }
 
-        // POST: api/Movies
-        [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
-        {
-            _context.Movies.Add(movie);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetMovie), new { id = movie.Id }, movie);
-        }
-
-        // PUT: api/Movies/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, Movie movie)
+        public async Task<IActionResult> PutMovie(int id, MoviePutDto movie)
         {
             if (id != movie.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(movie).State = EntityState.Modified;
+            var movieToUpdate = _mapper.Map<Movie>(movie);
+            var updatedMovie = await _movieService.UpdateAsync(movieToUpdate);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MovieExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/Movies/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovie(int id)
-        {
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie == null)
+            if (updatedMovie == null)
             {
                 return NotFound();
             }
 
-            _context.Movies.Remove(movie);
-            await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
-        private bool MovieExists(int id)
+
+        [HttpPost]
+        public async Task<ActionResult<MovieDto>> PostMovie(MoviePostDto movie)
         {
-            return _context.Movies.Any(e => e.Id == id);
+            var movieToAdd = _mapper.Map<Movie>(movie);
+            var addedFrannchise = await _movieService.CreateAsync(movieToAdd);
+
+
+            return CreatedAtAction(
+                nameof(GetMovie),
+                new { id = addedFrannchise.Id },
+                _mapper.Map<MovieDto>(addedFrannchise));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            var deletedMovie = await _movieService.DeleteAsync(id);
+
+
+            if (deletedMovie == null)
+            {
+                return NotFound();
+            }
+
+            return Ok();
         }
     }
 }

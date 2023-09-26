@@ -1,6 +1,6 @@
 namespace Assignment3.Data.Dtos.Movies
 {
-    public class MovieDto
+    public class MoviePutDto
     {
         public int Id { get; set; }
         public string MovieTitle { get; set; } = null!;
@@ -9,7 +9,5 @@ namespace Assignment3.Data.Dtos.Movies
         public string Director { get; set; } = null!;
         public string? PictureUrl { get; set; }
         public string? TrailerUrl { get; set; }
-        public int? FranchiseId { get; set; }
-        public List<int>? Characters { get; set; }
     }
 }
