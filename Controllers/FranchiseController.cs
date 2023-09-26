@@ -9,6 +9,7 @@ using Assignment3.Models;
 using Assignment3.Services.Franchises;
 using AutoMapper;
 using Assignment3.Data.Dtos.Franchises;
+using Assignment3.Data.Dtos.Movies;
 
 namespace Assignment3.Controllers
 {
@@ -100,5 +101,19 @@ namespace Assignment3.Controllers
             return Ok();
         }
 
+        [HttpGet("{id}/movies")]
+        public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies(int id)
+        {
+            var movies = await _franchiseService.GetMoviesAsync(id);
+            Console.WriteLine(movies);
+            if (movies == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(_mapper.Map<IEnumerable<MovieDto>>(movies));
+            }
+        }
     }
 }

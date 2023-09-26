@@ -99,5 +99,33 @@ namespace Assignment3.Services.Franchises
                 throw;
             }
         }
+
+        public async Task<List<Movie>> GetMoviesAsync(int id)
+        {
+            if (!await FranchiseExistsAsync(id))
+            {
+                return null!;
+            }
+            try
+            {
+                var movies = await _db.Movies
+                    .Where(m => m.FranchiseId == id)
+                    .Include(m => m.Characters)
+                    .ToListAsync();
+
+                    return movies;
+            }
+            catch (SqlException err)
+            {
+                Console.WriteLine(err.Message);
+                
+                throw;
+            }
+        }
+
+        public async Task<bool> FranchiseExistsAsync(int id)
+        {
+            return await _db.Franchises.AnyAsync(f => f.Id == id);
+        }
     }
 }
