@@ -1,4 +1,6 @@
-﻿using Assignment3.Models;
+﻿using Assignment3.Exceptionhandler;
+using Assignment3.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -99,5 +101,22 @@ namespace Assignment3.Services.Movies
                 throw;
             }
         }
+
+        public async Task<ICollection<Character>> GetCharactersAsync(int id)
+        {
+            var movie = await GetByIdAsync(id);
+
+            if (movie == null)
+            {
+                throw new EntityNotFoundException(nameof(Movie), id);
+            }
+
+            // return movie.Characters.ToList();
+            return await _db.Characters
+                .Where(c => c.Id == id)
+                .ToListAsync();
+
+        }
+
     }
 }
