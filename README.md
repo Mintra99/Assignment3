@@ -11,14 +11,51 @@ This project/assignment is a part of the Fullstack course by Noroff. The given c
 The project is structured in the following way:
 
 ### Controllers
+- CharacerController.cs
+- FranchiseController.cs
+- MovieController.cs
 
 ### Data
+- **Dtos**
+    - **Characters**
+        - CharacterDTO.cs
+        - CharacterPostDTO.cs
+        - CharacterPutDTO.cs
+    - **Franchise**
+        - FranchiseDTO.cs
+        - FranchisePostDto.cs
+        - FranchisePutDto.cs
+    - **Movies**
+        - MovieDTO.cs
+        - MoviePostDto.cs
+        - MoviePutDto.cs
+- **Models**
+    - Character.cs
+    - Franchise.cs
+    - Movie.cs
+- DbContext.cs
 
 ### Exceptionhandler
+- EntityNotFoundException.cs
 
 ### Helpers
+- NotFoundResponse.cs
 
 ### Services
+- **Characters**
+    - CharacterService.cs
+    - ICharacterService.cs
+- **Franchises**
+    - FranchiseService.cs
+    - IFranchiseService.cs
+- **Mappers**
+    - CharacterProfile.cs
+    - FranchiseProfile.cs
+    - MovieProfile.cs
+- **Movies**
+    - IMovieService.cs
+    - MovieService.cs
+- ICRUDService.cs
 
 ## Contributors
 
