@@ -1,4 +1,4 @@
-﻿using Assignment3.Exceptionhandler;
+﻿using Assignment3.Helpers.Exceptions;
 using Assignment3.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

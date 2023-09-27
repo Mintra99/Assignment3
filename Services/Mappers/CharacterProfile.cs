@@ -1,4 +1,5 @@
-﻿using Assignment3.Data.Dtos.Characters;
+﻿#nullable disable
+using Assignment3.Data.Dtos.Characters;
 using Assignment3.Models;
 using AutoMapper;
 

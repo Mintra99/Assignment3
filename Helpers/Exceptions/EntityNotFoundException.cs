@@ -1,4 +1,4 @@
-﻿namespace Assignment3.Exceptionhandler
+﻿namespace Assignment3.Helpers.Exceptions
 {
     public class EntityNotFoundException : Exception
     {

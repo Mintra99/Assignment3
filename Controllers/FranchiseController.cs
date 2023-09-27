@@ -10,9 +10,9 @@ using Assignment3.Services.Franchises;
 using AutoMapper;
 using Assignment3.Data.Dtos.Franchises;
 using Assignment3.Data.Dtos.Movies;
-using Assignment3.Exceptionhandler;
 using Assignment3.Data.Dtos.Characters;
 using Assignment3.Helpers;
+using Assignment3.Helpers.Exceptions;
 
 namespace Assignment3.Controllers
 {
@@ -156,7 +156,7 @@ namespace Assignment3.Controllers
         /// Updates the list of movies associated with a franchise.
         /// </summary>
         /// <param name="id">The ID of the franchise to update movies for.</param>
-        /// <param name="movieIds">An array of movie IDs to associate with the franchise.</param>
+        /// <param name="movieIds">An array of current + new movie IDs to associate with the franchise.</param>
         /// <returns>Returns NoContent if the update is successful.</returns>
         [HttpPut("{id}/movies")]
         public async Task<ActionResult> PutFranchiseMovies(int id, [FromBody] int[] movieIds)

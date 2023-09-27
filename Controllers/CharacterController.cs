@@ -9,9 +9,9 @@ using Assignment3.Models;
 using AutoMapper;
 using Assignment3.Data.Dtos.Characters;
 using Assignment3.Services.Characters;
-using Assignment3.Exceptionhandler;
 using Assignment3.Data.Dtos.Franchises;
 using Assignment3.Helpers;
+using Assignment3.Helpers.Exceptions;
 
 namespace Assignment3.Controllers
 {
