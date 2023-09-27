@@ -1,4 +1,5 @@
 using Assignment3.Data.Dtos.Movies;
+using Assignment3.Helpers;
 using Assignment3.Models;
 using Assignment3.Services.Movies;
 using AutoMapper;
@@ -38,7 +39,7 @@ namespace Assignment3.Controllers
             var movie = await _movieService.GetByIdAsync(id);
             if (movie == null)
             {
-                return NotFound();
+                return NotFound(new NotFoundResponse($"Movie with Id: {id} could not be found."));
             }
 
 
@@ -58,7 +59,7 @@ namespace Assignment3.Controllers
 
             if (updatedMovie == null)
             {
-                return NotFound();
+                return NotFound(new NotFoundResponse($"Movie with Id: {id} could not be found."));
             }
 
             return NoContent();
@@ -86,7 +87,7 @@ namespace Assignment3.Controllers
 
             if (deletedMovie == null)
             {
-                return NotFound();
+                return NotFound(new NotFoundResponse($"Movie with Id: {id} could not be found."));
             }
 
             return Ok();
