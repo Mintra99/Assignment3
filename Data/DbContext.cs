@@ -25,7 +25,8 @@ namespace Assignment3.Models
             modelBuilder.Entity<Movie>()
                 .HasOne(m => m.Franchise)
                 .WithMany(f => f.Movies)
-                .HasForeignKey(m => m.FranchiseId);
+                .HasForeignKey(m => m.FranchiseId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Seed data
             modelBuilder.Entity<Franchise>().HasData(
@@ -118,8 +119,8 @@ namespace Assignment3.Models
                 .WithMany(c => c.Movies)
                 .UsingEntity<Dictionary<string, object>>(
                     "MovieCharacter",
-                    l => l.HasOne<Character>().WithMany().HasForeignKey("CharacterId"),
-                    r => r.HasOne<Movie>().WithMany().HasForeignKey("MovieId"),
+                    l => l.HasOne<Character>().WithMany().HasForeignKey("CharacterId").OnDelete(DeleteBehavior.SetNull),
+                    r => r.HasOne<Movie>().WithMany().HasForeignKey("MovieId").OnDelete(DeleteBehavior.SetNull),
                     je =>
                     {
                         je.HasKey("MovieId", "CharacterId");

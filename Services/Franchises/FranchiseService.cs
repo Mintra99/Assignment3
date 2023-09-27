@@ -88,7 +88,13 @@ namespace Assignment3.Services.Franchises
 
             try
             {
-                var franchiseToDelete = await _db.Franchises.SingleAsync(f => f.Id == id);
+                var franchiseToDelete = await _db.Franchises.Include(f => f.Movies).SingleAsync(f => f.Id == id);
+
+                // Sets franchiseId in the movies to null, since they no longer has a franchise
+                foreach (var movie in franchiseToDelete.Movies!)
+                {
+                    movie.FranchiseId = null;
+                }
 
                 _db.Remove(franchiseToDelete);
                 await _db.SaveChangesAsync();
