@@ -178,10 +178,13 @@ namespace Assignment3.Services.Franchises
             {
                 foreach (var character in movie.Characters!)
                 {
-                    characters.Add(character);
+                    if(!characters.Contains(character))
+                    {
+                        characters.Add(character);
+                    }
                 }
             }
-            
+
             return characters;
         }
 
