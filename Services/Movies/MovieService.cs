@@ -1,4 +1,4 @@
-﻿using Assignment3.Exceptionhandler;
+﻿using Assignment3.Helpers.Exceptions;
 using Assignment3.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;

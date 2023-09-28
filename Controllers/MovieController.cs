@@ -35,6 +35,15 @@ namespace Assignment3.Controllers
             return Ok(_mapper.Map<IEnumerable<MovieDto>>(movies));
         }
 
+
+        /// <summary>
+        /// Retrieves a single movie by its id
+        /// </summary>
+        /// <param name="id">The id of the movie to retrieve.</param>
+        /// <returns>
+        /// If found, returns the specified Movie. 
+        /// If not found, returns a NotFound response with an error message
+        /// </returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<MovieDto>> GetMovie(int id)
         {
@@ -48,6 +57,15 @@ namespace Assignment3.Controllers
             return _mapper.Map<MovieDto>(movie);
         }
 
+        /// <summary>
+        /// Updates an existing movie with the specified id
+        /// </summary>
+        /// <param name="id">The id of the movie to update.</param>
+        /// <param name="movie">The updated movie</param>
+        /// <returns>
+        /// If the update is successful, returns a 204 No Content response.
+        /// If the movie with the given id is not found, returns a 404 NotFound response.
+        /// </returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie(int id, MoviePutDto movie)
         {
@@ -67,7 +85,13 @@ namespace Assignment3.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Creates a new movie
+        /// </summary>
+        /// <param name="movie">The movie data to create</param>
+        /// <returns>
+        /// If the creation is successful, returns a 201 Created response with the newly created movie's details.
+        /// </returns>
         [HttpPost]
         public async Task<ActionResult<MovieDto>> PostMovie(MoviePostDto movie)
         {
@@ -81,6 +105,14 @@ namespace Assignment3.Controllers
                 _mapper.Map<MovieDto>(addedFrannchise));
         }
 
+        /// <summary>
+        /// Deletes a movie by its id
+        /// </summary>
+        /// <param name="id">The id of the movie to delete</param>
+        /// <returns>
+        /// If the deletion is successful, returns a 200 OK response.
+        /// If the movie with the given id is not found, returns a 404 NotFound response.
+        /// </returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
@@ -95,6 +127,14 @@ namespace Assignment3.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Retrieves all characters associated with a movie by its id.
+        /// </summary>
+        /// <param name="id">The id of the movie to retrieve characters for.</param>
+        /// <returns>
+        /// If the movie is found, returns a list of character details associated with the movie.
+        /// If the movie with the given id is not found, returns a 404 NotFound response.
+        /// </returns>
         [HttpGet("{id}/characters")]
         public async Task<ActionResult<IEnumerable<CharacterDto>>> GetAllCharacters(int id)
         {
