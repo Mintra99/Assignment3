@@ -10,5 +10,6 @@ namespace Assignment3.Services.Movies
         /// <param name="id">The id of the movie</param>
         /// <returns>A list of <see cref="Character"/> associated with the movie</returns>
         Task<ICollection<Character>> GetCharactersAsync(int id);
+        Task UpdateCharactersAsync(int id, int[] characterIds);
     }
 }

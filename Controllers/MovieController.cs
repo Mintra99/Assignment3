@@ -1,6 +1,7 @@
 using Assignment3.Data.Dtos.Characters;
 using Assignment3.Data.Dtos.Movies;
 using Assignment3.Helpers;
+using Assignment3.Helpers.Exceptions;
 using Assignment3.Models;
 using Assignment3.Services.Movies;
 using AutoMapper;
@@ -145,6 +146,26 @@ namespace Assignment3.Controllers
             }
 
             return Ok(_mapper.Map<IEnumerable<CharacterDto>>(await _movieService.GetCharactersAsync(id)));
+        }
+
+        /// <summary>
+        /// Updates the list of characters associated with a movie.
+        /// </summary>
+        /// <param name="id">The ID of the movie to update characters for.</param>
+        /// <param name="characterIds">An array of current + new character IDs to associate with the movie.</param>
+        /// <returns>Returns NoContent if the update is successful.</returns>
+        [HttpPut("{id}/characters")]
+        public async Task<ActionResult> PutMovieCharacters(int id, [FromBody] int[] characterIds)
+        {
+            try
+            {
+                await _movieService.UpdateCharactersAsync(id, characterIds);
+                return NoContent();
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
+            }
         }
 
     }

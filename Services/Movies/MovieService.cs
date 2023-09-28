@@ -118,5 +118,50 @@ namespace Assignment3.Services.Movies
 
         }
 
+        public async Task UpdateCharactersAsync(int id, int[] characterIds)
+        {
+            if (!await MovieExistsAsync(id))
+            {
+                throw new EntityNotFoundException("Movie", id);
+            }
+
+            List<Character> charList = new List<Character>();
+            foreach (var cid in characterIds)
+            { 
+                if(!await CharacterExistsAsync(cid))
+                {
+                    throw new EntityNotFoundException("Character", cid);
+                }
+
+                charList.Add(_db.Characters.Single(c => c.Id == cid));
+            }
+
+            var movieToUpdate = await _db.Movies.Include(m => m.Characters).SingleAsync(m => m.Id == id);
+            movieToUpdate.Characters = charList;
+
+            await _db.SaveChangesAsync();
+        }
+
+        // Helper functions
+
+        /// <summary>
+        /// Checks if a character with the specified id exists in the database
+        /// </summary>
+        /// <param name="id">The id of the character to check</param>
+        /// <returns><c>true</c> if a character with the specified id exists; otherwise, <c>false</c></returns>
+        public async Task<bool> CharacterExistsAsync(int id)
+        {
+            return await _db.Characters.AnyAsync(f => f.Id == id);
+        }
+
+        /// <summary>
+        /// Checks if a movie with the specified id exists in the database
+        /// </summary>
+        /// <param name="id">The id of the movie to check</param>
+        /// <returns><c>true</c> if a movie with the specified id exists; otherwise, <c>false</c></returns>
+        public async Task<bool> MovieExistsAsync(int id)
+        {
+            return await _db.Movies.AnyAsync(f => f.Id == id);
+        }
     }
 }
