@@ -2,11 +2,9 @@ using Assignment3.Data.Dtos.Characters;
 using Assignment3.Data.Dtos.Movies;
 using Assignment3.Helpers;
 using Assignment3.Helpers.Exceptions;
-using Assignment3.Models;
 using Assignment3.Services.Movies;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Assignment3.Controllers
 {
@@ -139,13 +137,17 @@ namespace Assignment3.Controllers
         [HttpGet("{id}/characters")]
         public async Task<ActionResult<IEnumerable<CharacterDto>>> GetAllCharacters(int id)
         {
-            var movie = await _movieService.GetByIdAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(_mapper.Map<IEnumerable<CharacterDto>>(await _movieService.GetCharactersAsync(id)));
+            try
+            {
+                var characters = await _movieService.GetCharactersAsync(id);
+                var charDto = _mapper.Map<IEnumerable<CharacterDto>>(characters);
+                return Ok(charDto);
+            }
+            catch (EntityNotFoundException err)
+            {
+                return NotFound(new NotFoundResponse(err.Message));
+            }
         }
 
         /// <summary>

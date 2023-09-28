@@ -1,6 +1,5 @@
 ﻿using Assignment3.Helpers.Exceptions;
 using Assignment3.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -104,18 +103,31 @@ namespace Assignment3.Services.Movies
 
         public async Task<ICollection<Character>> GetCharactersAsync(int id)
         {
-            var movie = await GetByIdAsync(id);
-
-            if (movie == null)
+            if (!await MovieExistsAsync(id))
             {
-                throw new EntityNotFoundException(nameof(Movie), id);
+                throw new EntityNotFoundException("Movie", id);
             }
 
-            // return movie.Characters.ToList();
-            return await _db.Characters
-                .Where(c => c.Id == id)
+            List<Character> characters = new List<Character>();
+
+            var movies = await _db.Movies
+                .Include(m => m.Characters)
+                .Where(m => m.FranchiseId == id)
                 .ToListAsync();
 
+
+            foreach (var movie in movies)
+            {
+                foreach (var character in movie.Characters!)
+                {
+                    if (!characters.Contains(character))
+                    {
+                        characters.Add(character);
+                    }
+                }
+            }
+
+            return characters;
         }
 
         public async Task UpdateCharactersAsync(int id, int[] characterIds)
