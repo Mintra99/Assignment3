@@ -13,11 +13,6 @@ namespace Assignment3.Services.Characters
             _context = context;
         }
 
-        /// <summary>
-        /// Creates a new character entity in the database.
-        /// </summary>
-        /// <param name="entity">The character entity to create.</param>
-        /// <returns>The created character entity.</returns>
         public async Task<Character> CreateAsync(Character entity)
         {
             try
@@ -33,10 +28,6 @@ namespace Assignment3.Services.Characters
             }
         }
 
-        /// <summary>
-        /// Retrieves a list of all character entities from the database.
-        /// </summary>
-        /// <returns>A list of character entities.</returns>
         public async Task<List<Character>> GetAsync()
         {
             var characters = await _context.Characters
@@ -46,11 +37,6 @@ namespace Assignment3.Services.Characters
             return characters;
         }
 
-        /// <summary>
-        /// Retrieves a character entity by its ID from the database.
-        /// </summary>
-        /// <param name="id">The ID of the character entity to retrieve.</param>
-        /// <returns>The character entity with the specified ID.</returns>
         public Task<Character> GetByIdAsync(int id)
         {
             try
@@ -68,11 +54,6 @@ namespace Assignment3.Services.Characters
             }
         }
 
-        /// <summary>
-        /// Updates an existing character entity in the database.
-        /// </summary>
-        /// <param name="entity">The updated character entity.</param>
-        /// <returns>The updated character entity.</returns>
         public async Task<Character> UpdateAsync(Character entity)
         {
             try
@@ -99,11 +80,6 @@ namespace Assignment3.Services.Characters
             }
         }
 
-        /// <summary>
-        /// Deletes a character entity from the database by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the character entity to delete.</param>
-        /// <returns>The deleted character entity, or null if not found.</returns>
         public async  Task<Character> DeleteAsync(int id)
         {
             try
