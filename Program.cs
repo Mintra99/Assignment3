@@ -1,13 +1,9 @@
-using System.Text;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Data.SqlClient;
 using Microsoft.OpenApi.Models;
 using Assignment3.Services.Characters;
 using Assignment3.Services.Franchises;
 using Assignment3.Services.Movies;
-using Microsoft.Extensions.Options;
 using Assignment3.Models;
 
 var builder = WebApplication.CreateBuilder(args);

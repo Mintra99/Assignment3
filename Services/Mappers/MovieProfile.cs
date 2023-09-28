@@ -1,7 +1,5 @@
 ﻿#nullable disable
-using Assignment3.Data.Dtos.Franchises;
 using Assignment3.Data.Dtos.Movies;
-using Assignment3.Models;
 using AutoMapper;
 namespace Assignment3.Services.Mappers
 {
