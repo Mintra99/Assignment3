@@ -2,6 +2,7 @@
 using Assignment3.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Assignment3.Services.Franchises
 {
@@ -168,13 +169,15 @@ namespace Assignment3.Services.Franchises
 
             List<Character> characters = new List<Character>();
 
-            var movies = await _db.Movies
-                .Include(m => m.Characters)
-                .Where(m => m.FranchiseId == id)
-                .ToListAsync();
+            #nullable disable
+            var franchises = await _db.Franchises
+                .Include(f => f.Movies)
+                .ThenInclude(m => m.Characters)
+                .ThenInclude(c => c.Movies)
+                .SingleAsync(f => f.Id == id);
+            #nullable enable
 
-
-            foreach( var movie in movies)
+            foreach (var movie in franchises.Movies!)
             {
                 foreach (var character in movie.Characters!)
                 {
@@ -184,7 +187,6 @@ namespace Assignment3.Services.Franchises
                     }
                 }
             }
-
             return characters;
         }
 
